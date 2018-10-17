@@ -13,10 +13,10 @@ ui <- fluidPage(
     sidebarPanel(
       
       # Input: Select a dataset ----
-      selectInput("sport", "Choose a sport:",
+      selectInput("Sport", "sport:",
                   choices = c("Basketball", "Baseball")),
       
-      selectInput("Year", "Choose the year you want to see:",
+      selectInput("Year", "year:",
                   choices = c("2012", "2013","2014","2015","2016","2017")),
       
       # Include clarifying text ----
@@ -34,11 +34,11 @@ ui <- fluidPage(
     # Main panel for displaying outputs ----
     mainPanel(
       
-      # Output: Header + summary of distribution ----
+      # Output: summary of distribution
       h4("Attendance plot"),
       verbatimTextOutput("Attendance plot"),
       
-      # Output: Header + table of distribution ----
+      # Output: weather of that day
       h4("weather"),
       tableOutput("weather")
     )
@@ -46,31 +46,50 @@ ui <- fluidPage(
   )
 )
 
+
+
+
+
+
+
+
 # Define server logic to summarize and view selected dataset ----
 server <- function(input, output) {
   
   # Return the requested dataset ----
   # Note that we use eventReactive() here, which depends on
-  # input$update (the action button), so that the output is only
-  # updated when the user clicks the button
-  datasetInput <- eventReactive(input$update, {
-    switch(input$dataset,
-           "rock" = rock,
-           "pressure" = pressure,
-           "cars" = cars)
-  }, ignoreNULL = FALSE)
+  # input$update (the action button), so that the output is only updated when the user clicks the button
   
-  # Generate a summary of the dataset ----
-  output$summary <- renderPrint({
+  datasetInput <- eventReactive(input$Show, 
+    switch(input$dataset,
+           Basketball = "Basketball",
+              2012 = "2012BK",
+              2013 = "2013BK",
+              2014 = "2014BK",
+              2015 = "2015BK",
+              2016 = "2016BK",
+              2017 = "2017BK",
+           
+           Baseball = "Baseball",
+             2012 = "2012BS",
+             2013 = "2013BS",
+             2014 = "2014BS",
+             2015 = "2015BS",
+             2016 = "2016BS",
+             2017 = "2017Bs",
+    
+    ))
+           
+
+  
+
+  output$sport <- renderPrint({
     dataset <- datasetInput()
     summary(dataset)
   })
   
-  # Show the first "n" observations ----
-  # The use of isolate() is necessary because we don't want the table
-  # to update whenever input$obs changes (only when the user clicks
-  # the action button)
-  output$view <- renderTable({
+
+  output$year <- renderTable({
     head(datasetInput(), n = isolate(input$obs))
   })
   

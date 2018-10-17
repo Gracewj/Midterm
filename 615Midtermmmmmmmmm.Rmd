@@ -15,40 +15,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(xml2)
 library(rvest)
 library(tidyverse)
-site1 <- "https://www.basketball-reference.com/leagues/NBA_"
-site2 <- "_games-"
-site3 <- ".html"
-year <- c(2013:2018)
-month <- c("january","february","march","april","may","june","october","november","december")
-month_index<-c(1:9)
-year_index<-c(1:6)
-name1<-c()
-name2<-c()
-total.date<-c()
-total.attdence<-c()
-for (i in year_index){
-  for (j in month_index){
-    site<-paste(site1,year[i],site2,month[j],site3,sep="")
-    webpage<-read_html(site)
-    name1<- webpage %>% html_nodes('.left:nth-child(1)') %>% html_attrs()
-    name2<- webpage %>% html_nodes('.center+.right') %>% html_text()
-    total.date <- c(total.date,name1)
-    total.attdence <- c(total.attdence,name2)
-    j<-j+1
-  }
-  i<-i+1
-}
-```
 
-```{r}
-total.date1 <- t(data.frame((total.date)))[,4]
-total.attdence1 <- data.frame(total.attdence)
-b_data<-cbind(total.date1,total.attdence1)[-1,]
-colnames(b_data)<-c("date","attendance")
-rownames(b_data)<-rep(1:7934)
-host<-substr(b_data$date, 10, 12)
-b_data$date<-substr(b_data$date,1,9)
-b_data3<-cbind(b_data,host)
+b_data3<-read.csv("basketball.csv")
 
 Homegame <- filter(b_data3,str_detect(host,"BOS"))
 Homegame$date <- substring(Homegame$date, 1,8)
@@ -84,6 +52,7 @@ for (i in 1:length(typelist)) {
 Celtics_All[is.null(Celtics_All)] <- NA
 
 ```
+
 
 ```{r}
 ##Run through all types to get the weather of a certain day, add that to the "type" column
@@ -301,7 +270,6 @@ Table_2017<- inner_join(C_2017,Weather_2017,by = "Date", match = all)
 
 ```{r}
 ##merge
-
 Table_all <- do.call("rbind", list(Table_2012,Table_2013,Table_2014,Table_2015,Table_2016,Table_2017))
 ```
 

@@ -60,6 +60,8 @@ Home_2017 <- filter(Homegame,str_detect(date,"2017"))
 weather_data <- read.csv("weather data.csv")
 colnames(weather_data)[colnames(weather_data)=="DATE"] <- "date"
 weather_data$date <- as.Date(weather_data$date,"%Y-%m-%d")
+typelist = c("Fog","Mist","Drizze","Rain","Snow")
+type_code = c("WT01","WT13","WT14","WT16","WT18")
 
 Celtics_2012<- inner_join(Home_2012,weather_data,by = "date", match = all)
 Celtics_2013<- inner_join(Home_2013,weather_data,by = "date", match = all)
@@ -68,6 +70,32 @@ Celtics_2015<- inner_join(Home_2015,weather_data,by = "date", match = all)
 Celtics_2016<- inner_join(Home_2016,weather_data,by = "date", match = all)
 Celtics_2017<- inner_join(Home_2017,weather_data,by = "date", match = all)
 Celtics_All <- do.call("rbind", list(Celtics_2012,Celtics_2013,Celtics_2014,Celtics_2015,Celtics_2016,Celtics_2017))
+
+Celtics_All$type<-NA
+
+for (i in 1:length(typelist)) {
+  colnames(Celtics_All)[which(colnames(Celtics_All)==type_code[i])] = typelist[i]
+}
+
+Celtics_All[is.null(Celtics_All)] <- NA
+
+##Run through all types to get the weather of a certain day, add that to the "type" column
+for (m in 1:dim(Celtics_All)[1]) {
+  t<-0
+  for (n in 1:length(typelist)) {
+    if (is.null(Celtics_All[m,typelist[n]])) {
+      Celtics_All[m,typelist[n]] = NA
+    }
+    if (!is.na(Celtics_All[m,typelist[n]])) {
+      Celtics_All[m,"type"] =  typelist[n]
+      t<-t+1
+    }
+  }
+  if(t==0)
+    Celtics_All[m,"type"] = "normal"
+}
+
+
 
 ```
 

@@ -13,10 +13,10 @@ ui <- fluidPage(
     sidebarPanel(
       
       # Input: Select a dataset ----
-      selectInput("sport", "Choose a sport:",
+      selectInput("Sport", "sport:",
                   choices = c("Basketball", "Baseball")),
       
-      selectInput("Year", "Choose the year you want to see:",
+      selectInput("Year", "year:",
                   choices = c("2012", "2013","2014","2015","2016","2017")),
       
       # Include clarifying text ----
@@ -47,25 +47,49 @@ ui <- fluidPage(
 )
 
 
+
+
+
+
+
+
+# Define server logic to summarize and view selected dataset ----
 server <- function(input, output) {
   
-
+  # Return the requested dataset ----
+  # Note that we use eventReactive() here, which depends on
+  # input$update (the action button), so that the output is only updated when the user clicks the button
   
-  datasetInput <- eventReactive(input$update, 
+  datasetInput <- eventReactive(input$Show, 
     switch(input$dataset,
            Basketball = "Basketball",
-           Baseball = "Baseball"))
+              2012 = "2012BK",
+              2013 = "2013BK",
+              2014 = "2014BK",
+              2015 = "2015BK",
+              2016 = "2016BK",
+              2017 = "2017BK",
+           
+           Baseball = "Baseball",
+             2012 = "2012BS",
+             2013 = "2013BS",
+             2014 = "2014BS",
+             2015 = "2015BS",
+             2016 = "2016BS",
+             2017 = "2017Bs",
+    
+    ))
            
 
   
 
-  output$summary <- renderPrint({
+  output$sport <- renderPrint({
     dataset <- datasetInput()
     summary(dataset)
   })
   
 
-  output$view <- renderTable({
+  output$year <- renderTable({
     head(datasetInput(), n = isolate(input$obs))
   })
   

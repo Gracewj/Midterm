@@ -34,11 +34,11 @@ ui <- fluidPage(
     # Main panel for displaying outputs ----
     mainPanel(
       
-      # Output: Header + summary of distribution ----
+      # Output: summary of distribution
       h4("Attendance plot"),
       verbatimTextOutput("Attendance plot"),
       
-      # Output: Header + table of distribution ----
+      # Output: weather of that day
       h4("weather"),
       tableOutput("weather")
     )
@@ -46,30 +46,25 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic to summarize and view selected dataset ----
+
 server <- function(input, output) {
   
-  # Return the requested dataset ----
-  # Note that we use eventReactive() here, which depends on
-  # input$update (the action button), so that the output is only
-  # updated when the user clicks the button
-  datasetInput <- eventReactive(input$update, {
-    switch(input$dataset,
-           "rock" = rock,
-           "pressure" = pressure,
-           "cars" = cars)
-  }, ignoreNULL = FALSE)
+
   
-  # Generate a summary of the dataset ----
+  datasetInput <- eventReactive(input$update, 
+    switch(input$dataset,
+           Basketball = "Basketball",
+           Baseball = "Baseball"))
+           
+
+  
+
   output$summary <- renderPrint({
     dataset <- datasetInput()
     summary(dataset)
   })
   
-  # Show the first "n" observations ----
-  # The use of isolate() is necessary because we don't want the table
-  # to update whenever input$obs changes (only when the user clicks
-  # the action button)
+
   output$view <- renderTable({
     head(datasetInput(), n = isolate(input$obs))
   })

@@ -68,5 +68,6 @@ Celtics_2015<- inner_join(Home_2015,weather_data,by = "date", match = all)
 Celtics_2016<- inner_join(Home_2016,weather_data,by = "date", match = all)
 Celtics_2017<- inner_join(Home_2017,weather_data,by = "date", match = all)
 Celtics_All <- do.call("rbind", list(Celtics_2012,Celtics_2013,Celtics_2014,Celtics_2015,Celtics_2016,Celtics_2017))
+
 ```
 

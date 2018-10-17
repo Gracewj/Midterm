@@ -1,0 +1,11 @@
+---
+title: "615Midtermmmmmmm"
+author: "Kaiyu Yan,Si Chen, Wenjia Xie, Siwei Hu"
+date: "October 17, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+

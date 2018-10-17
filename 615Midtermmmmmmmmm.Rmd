@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+##### new
 ##### Basketball #####
 library(xml2)
 library(rvest)
@@ -37,7 +38,9 @@ for (i in year_index){
   }
   i<-i+1
 }
+```
 
+```{r}
 total.date1 <- t(data.frame((total.date)))[,4]
 total.attdence1 <- data.frame(total.attdence)
 b_data<-cbind(total.date1,total.attdence1)[-1,]
@@ -80,6 +83,9 @@ for (i in 1:length(typelist)) {
 
 Celtics_All[is.null(Celtics_All)] <- NA
 
+```
+
+```{r}
 ##Run through all types to get the weather of a certain day, add that to the "type" column
 for (m in 1:dim(Celtics_All)[1]) {
   t<-0
@@ -95,6 +101,9 @@ for (m in 1:dim(Celtics_All)[1]) {
   if(t==0)
     Celtics_All[m,"type"] = "normal"
 }
+```
+
+```{r}
 #######  Baseball Data  ######
 site1 <- "https://www.basketball-reference.com/leagues/NBA_"
 site2 <- "_games-"
@@ -152,7 +161,10 @@ for (i in 1:length(typelist)) {
 }
 
 weather_data[is.null(weather_data)] <- NA
+```
 
+
+```{r}
 ##Run through all types to get the weather of a certain day, add that to the "type" column
 for (m in 1:dim(weather_data)[1]) {
   t<-0
@@ -184,8 +196,9 @@ C_2017$year <- rep(2017,nrow(C_2017)) # make new column
 A <- C_2017[,c(1,4,2,3)]
 C_2017 <- unite(A, Date,2:4, sep = "-", remove = TRUE)
 C_2017$Date <- as.Date(C_2017$Date,"%Y-%m-%d")
+```
 
-
+```{r}
 # Read and select home game from 2016 Dataset
 Game_2016 <- select(Raw_2016, Date, Tm:Opp, contains("D/N"), Attendance)
 Data_2016<- data.frame(do.call('rbind', strsplit(as.character(Game_2016$Date),',',fixed=TRUE)))
@@ -200,7 +213,10 @@ A <- C_2016[,c(1,4,2,3)]
 C_2016 <- unite(A, Date,2:4, sep = "-", remove = TRUE)
 C_2016$Date <- as.Date(C_2016$Date,"%Y-%m-%d")
 C_2016 <- na.omit(C_2016)
+```
 
+
+```{r}
 # Read and select home game from 2015 Dataset
 Game_2015 <- select(Raw_2015, Date, Tm:Opp, contains("D/N"), Attendance)
 Data_2015<- data.frame(do.call('rbind', strsplit(as.character(Game_2015$Date),',',fixed=TRUE)))
@@ -214,8 +230,10 @@ C_2015$year <- rep(2015,nrow(C_2015)) # make new column
 A <- C_2015[,c(1,4,2,3)]
 C_2015 <- unite(A, Date,2:4, sep = "-", remove = TRUE)
 C_2015$Date <- as.Date(C_2015$Date,"%Y-%m-%d")
+```
 
 
+```{r}
 # Read and select home game from 2014 Dataset
 Game_2014 <- select(Raw_2014, Date, Tm:Opp, contains("D/N"), Attendance)
 Data_2014<- data.frame(do.call('rbind', strsplit(as.character(Game_2014$Date),',',fixed=TRUE)))
@@ -229,8 +247,10 @@ C_2014$year <- rep(2014,nrow(C_2014)) # make new column
 A <- C_2014[,c(1,4,2,3)]
 C_2014 <- unite(A, Date,2:4, sep = "-", remove = TRUE)
 C_2014$Date <- as.Date(C_2014$Date,"%Y-%m-%d")
+```
 
 
+```{r}
 # Read and select home game from 2013 Dataset
 Game_2013 <- select(Raw_2013, Date, Tm:Opp, contains("D/N"), Attendance)
 Data_2013<- data.frame(do.call('rbind', strsplit(as.character(Game_2013$Date),',',fixed=TRUE)))
@@ -244,7 +264,10 @@ C_2013$year <- rep(2013,nrow(C_2013)) # make new column
 A <- C_2013[,c(1,4,2,3)]
 C_2013 <- unite(A, Date,2:4, sep = "-", remove = TRUE)
 C_2013$Date <- as.Date(C_2013$Date,"%Y-%m-%d")
+```
 
+
+```{r}
 # Read and select home game from 2012 Dataset
 Game_2012 <- select(Raw_2012, Date, Tm:Opp, contains("D/N"), Attendance)
 Data_2012<- data.frame(do.call('rbind', strsplit(as.character(Game_2012$Date),',',fixed=TRUE)))
@@ -258,8 +281,10 @@ C_2012$year <- rep(2012,nrow(C_2012)) # make new column
 A <- C_2012[,c(1,4,2,3)]
 C_2012 <- unite(A, Date,2:4, sep = "-", remove = TRUE)
 C_2012$Date <- as.Date(C_2012$Date,"%Y-%m-%d")
+```
 
 
+```{r}
 #join with Weather
 
 
@@ -304,12 +329,11 @@ Weather_2017 <- filter(weather_data,str_detect(DATE,"2017"))
 colnames(Weather_2017)[colnames(Weather_2017)=="DATE"] <- "Date"
 Weather_2017$Date <- as.Date(Weather_2017$Date,"%Y-%m-%d")
 Table_2017<- inner_join(C_2017,Weather_2017,by = "Date", match = all)
+```
 
-
+```{r}
 ##merge
 
 Table_all <- do.call("rbind", list(Table_2012,Table_2013,Table_2014,Table_2015,Table_2016,Table_2017))
-
-
 ```
 

@@ -128,3 +128,15 @@ pic<-ggplot(data = weather_year) +
 print(pic)
 }
 ```
+
+```{r}
+Dataset= list(Celtics_2012,Celtics_2013,Celtics_2014,Celtics_2015,Celtics_2016,Celtics_2017)
+
+for(i in 1:6){ 
+  p<- ggplot(data = Dataset[[i]],aes(x = TAVG, y = Attendance,  color = type))+
+    geom_point()+geom_smooth(se=F)
+    print(p)
+    }
+
+
+```

@@ -154,7 +154,7 @@ Btw, we grab baseball data each year because the baseball season is from April t
 # write.csv(b_data3,'Baseball.csv')
 ```
 
-WE select several variable include Date, Attendance, year and etc. Since the date of base is like "Sunday,04,11", we seperate "Sunday","04","11" to three different columns and merge year,month and day to be  
+WE select several variable include Date, Attendance, year and etc. Since the date of base is like "Sunday,04,11", we seperate "Sunday","04","11" to three different columns and merge year,month and day to be a new date variable, use filter function to get host information. We spend a lot of time to change this date type to become same as the date type in weather data. Final we get date type like "yyyy-mm-dd".
 ```{r}
 ####### Baseball Data Only #######
 Baseball <- read.csv("Baseball.csv")
@@ -170,6 +170,8 @@ Baseball_All<- unite(Clean_5,Date,2:4,sep = "-",remove = TRUE)
 Baseball_All$Date <- as.Date(Baseball_All$Date,"%Y-%m-%d")
 ```
 
+We use inner_join to get weather data only when these two teams played in their host. 
+
 ```{r}
 ##### Basketball Join Weather ######
 Celtics_All <- inner_join(Homegame,weather_data,by = "Date", match = all) 
@@ -182,8 +184,6 @@ for(i in 2012:2017) {
 
 } 
 ```
-
-
 ```{r}
 ##### Baseball Join Weather #####
 Redsox_All <- inner_join(Baseball_All,weather_data,by = "Date", match = all) 

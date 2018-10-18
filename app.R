@@ -63,20 +63,13 @@ server <- function(input, output) {
   datasetInput <- eventReactive(input$Show, 
     switch(input$dataset,
            Basketball = "Basketball",
-              2012 = "2012BK",
-              2013 = "2013BK",
-              2014 = "2014BK",
-              2015 = "2015BK",
-              2016 = "2016BK",
-              2017 = "2017BK",
-           
            Baseball = "Baseball",
-             2012 = "2012BS",
-             2013 = "2013BS",
-             2014 = "2014BS",
-             2015 = "2015BS",
-             2016 = "2016BS",
-             2017 = "2017Bs",
+             "2012" = "2012BS",
+             "2013" = "2013BS",
+             "2014" = "2014BS",
+             "2015" = "2015BS",
+             "2016" = "2016BS",
+             "2017" = "2017Bs"
     
     ))
            

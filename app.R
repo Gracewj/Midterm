@@ -1,92 +1,123 @@
 library(shiny)
 
-# Define UI for dataset viewer app ----
-ui <- fluidPage(
+library(tidyverse)
+
+##### new
+##### Weather Data #####
+
+weather_data <- read.csv("weather data.csv")
+colnames(weather_data)[colnames(weather_data)=="DATE"] <- "Date"
+
+weather_data$Date <- as.Date(weather_data$Date,"%Y-%m-%d")
+typelist = c("Fog","Mist","Drizze","Rain","Snow","Thunder","Heavy fog")
+type_code = c("WT01","WT13","WT14","WT16","WT18","WT03","WT02")
+weather_data$type<-NA
+
+for (i in 1:length(typelist)) {
+  colnames(weather_data)[which(colnames(weather_data)==type_code[i])] = typelist[i]
+}
+
+weather_data[is.null(weather_data)] <- NA
+##Run through all types to get the weather of a certain day, add that to the "type" column
+for (m in 1:dim(weather_data)[1]) {
+  t<-0
+  for (n in 1:length(typelist)) {
+    if (is.null(weather_data[m,typelist[n]])) {
+      weather_data[m,typelist[n]] = NA
+    }
+    if (!is.na(weather_data[m,typelist[n]])) {
+      weather_data[m,"type"] =  typelist[n]
+      t<-t+1
+    }
+  }
+  if(t==0)
+    weather_data[m,"type"] = "normal"
+}
+
+
+##### Basketball Data Only #####
+Basketball<-read.csv("basketball.csv")
+Homegame <- filter(Basketball,str_detect(host,"BOS"))
+Homegame$date <- substring(Homegame$date, 1,8)
+Homegame$date <- as.Date(Homegame$date,"%Y%m%d")
+names(Homegame)[2]<-paste("Date")
+names(Homegame)[3]<-paste("Attendance")
+
+####### Baseball Data Only #######
+Baseball <- read.csv("Baseball.csv")
+Clean_1 <- select(Baseball, Date, Tm:Opp, Attendance,Year)
+Clean_2 <- data.frame(do.call('rbind', strsplit(as.character(Clean_1$Date),',',fixed=TRUE)))
+Clean_2 <- data.frame(do.call('rbind', strsplit(as.character(Clean_2$X2),' ',fixed=TRUE)))
+Clean_1 <- merge(Clean_1,Clean_2,by = 0)
+Clean_3<- filter(Clean_1, !str_detect(Var.5,"@"))
+Clean_4 <- filter(Clean_3,str_detect(Tm,"BOS"))
+Clean_5 <- select(Clean_4, 6,7,9,10)
+Clean_5$X2 <- match(Clean_5$X2,month.abb)
+Baseball_All<- unite(Clean_5,Date,2:4,sep = "-",remove = TRUE) 
+Baseball_All$Date <- as.Date(Baseball_All$Date,"%Y-%m-%d")
+
+##### Basketball Join Weather ######
+Celtics_All <- inner_join(Homegame,weather_data,by = "Date", match = all) 
+Celtics_All <- select(Celtics_All,Date,Attendance,TAVG,type)
+Celtics_All$Attendance <-  as.numeric(as.character(Celtics_All$Attendance))
+
+#Full baseball data for each year
+for(i in 2012:2017) { 
+  assign(paste("Celtics",i,sep="_"),filter(Celtics_All,str_detect(Date,paste(i))))
   
-  # App title ----
-  titlePanel("Weather vs Sports"),
+} 
+
+##### Baseball Join Weather #####
+Redsox_All <- inner_join(Baseball_All,weather_data,by = "Date", match = all) 
+Redsox_All <- select(Redsox_All,Date,Attendance,TAVG,type)
+Redsox_All$Attendance <-  as.numeric(as.character(Redsox_All$Attendance))
+
+#Full baseball data for each year
+for(i in 2012:2017) { 
+  assign(paste("Redsox",i,sep="_"),filter(Redsox_All,str_detect(Date,paste(i))))
   
-  # Sidebar layout with input and output definitions ----
-  sidebarLayout(
-    
-    # Sidebar panel for inputs ----
+} 
+
+ui <- fluidPage(    
+  # Give the page a title
+  titlePanel("Weather vs. Attendence"),
+  # Generate a row with a sidebar
+  sidebarLayout(      
+    # Define the sidebar with one input
     sidebarPanel(
-      
-      # Input: Select a dataset ----
-      selectInput("Sport", "sport:",
-                  choices = c("Basketball", "Baseball")),
-      
-      selectInput("Year", "year:",
-                  choices = c("2012", "2013","2014","2015","2016","2017")),
-      
-      # Include clarifying text ----
-      helpText("Note: We collected the data from Basketball reference and Baseball reference."),
-      
-      # Input: actionButton() to defer the rendering of output ----
-      # until the user explicitly clicks the button (rather than
-      # doing it immediately when inputs change). This is useful if
-      # the computations required to render output are inordinately
-      # time-consuming.
-      actionButton("Show", "Go")
-      
+      selectInput("YYYY", "Year:", 
+                  choices=c(2012:2017)),
+      hr()
     ),
-    
-    # Main panel for displaying outputs ----
+    # Create a spot for the barplot
     mainPanel(
-      
-      # Output: summary of distribution
-      h4("Attendance plot"),
-      verbatimTextOutput("Attendance plot"),
-      
-      # Output: weather of that day
-      h4("weather"),
-      tableOutput("weather")
+      "main panel",
+      fluidRow(
+        splitLayout(cellWidths = c("50%", "50%"), plotOutput("plot1"), plotOutput("plot2"))
+      )
     )
     
   )
 )
 
-
-
-
-
-
-
-
-# Define server logic to summarize and view selected dataset ----
 server <- function(input, output) {
   
-  # Return the requested dataset ----
-  # Note that we use eventReactive() here, which depends on
-  # input$update (the action button), so that the output is only updated when the user clicks the button
-  
-  datasetInput <- eventReactive(input$Show, 
-    switch(input$dataset,
-           Basketball = "Basketball",
-           Baseball = "Baseball",
-             "2012" = "2012BS",
-             "2013" = "2013BS",
-             "2014" = "2014BS",
-             "2015" = "2015BS",
-             "2016" = "2016BS",
-             "2017" = "2017Bs"
-    
-    ))
-           
-
-  
-
-  output$sport <- renderPrint({
-    dataset <- datasetInput()
-    summary(dataset)
+  dat <- reactive({as.data.frame(filter(Redsox_All,str_detect(Date,paste(input$YYYY))))
   })
   
-
-  output$year <- renderTable({
-    head(datasetInput(), n = isolate(input$obs))
+  output$plot1 <- renderPlot({
+    # Plot the kept and excluded points as two separate data sets
+    ggplot(data = dat(),aes(x = Date, y = Attendance, color = TAVG))+geom_point( )
+    
+  })
+  
+  output$plot2 <- renderPlot({
+    # Plot the kept and excluded points as two separate data sets
+    ggplot(data = dat()) +
+      geom_smooth(mapping = aes( x = TAVG, y = Attendance, color = type), se = F)
+    
   })
   
 }
 
-# Create Shiny app ----
-shinyApp(ui, server)
+shinyApp(ui = ui, server = server)

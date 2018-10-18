@@ -102,19 +102,22 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
-  dat <- reactive({as.data.frame(filter(Redsox_All,str_detect(Date,paste(input$YYYY))))
-  })
+  dat <- reactive(as.data.frame(filter(Redsox_All,str_detect(Date,paste(input$YYYY))))
+  )
   
   output$plot1 <- renderPlot({
     # Plot the kept and excluded points as two separate data sets
-    ggplot(data = dat(),aes(x = Date, y = Attendance, color = TAVG))+geom_point( )
+    ggplot(data = dat(),aes(x = Date, y = Attendance, color = TAVG))+geom_point( )+
+      ggtitle("Baseball attendance vs daily Temperature")
     
   })
   
   output$plot2 <- renderPlot({
     # Plot the kept and excluded points as two separate data sets
     ggplot(data = dat()) +
-      geom_smooth(mapping = aes( x = TAVG, y = Attendance, color = type), se = F)
+      geom_smooth(fomula = y ~ x, mapping = aes( x = TAVG, y = Attendance, color = type), se = F)+
+      geom_point(mapping = aes( x = TAVG, y = Attendance, color = type), se = F)+
+      ggtitle("Baseball Attendance vs Overall Tempreature ")
     
   })
   

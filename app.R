@@ -85,13 +85,14 @@ ui <- fluidPage(
   sidebarLayout(      
     # Define the sidebar with one input
     sidebarPanel(
-      selectInput("YYYY", "Year:", 
+      selectInput("YYYY", "Choose the year you want to compare:", 
                   choices=c(2012:2017)),
-      hr()
+      hr(),
+      helpText("Data is collected from website Baseball reference and Basketball reference.Due to data structure, some smooth plot cannot be shown.")
     ),
     # Create a spot for the barplot
     mainPanel(
-      "main panel",
+      h1("Plot Summary"),
       fluidRow(
         splitLayout(cellWidths = c("50%", "50%"), plotOutput("plot1"), plotOutput("plot2"))
       )
@@ -104,12 +105,12 @@ server <- function(input, output) {
   
   dat <- reactive(as.data.frame(filter(Redsox_All,str_detect(Date,paste(input$YYYY))))
   )
+  dat1 <- reactive(as.data.frame(filter(Celtics_All,str_detect(Date,paste(input$YYYY)))))
   
   output$plot1 <- renderPlot({
-    # Plot the kept and excluded points as two separate data sets
-    ggplot(data = dat(),aes(x = Date, y = Attendance, color = TAVG))+geom_point( )+
-      ggtitle("Baseball attendance vs daily Temperature")
-    
+    ggplot(data = dat1(),aes(x = TAVG, y = Attendance,  color = type))+
+      geom_point()+geom_smooth(se=F)+
+    ggtitle("Basketball Attendance vs Overall Tempreature ")
   })
   
   output$plot2 <- renderPlot({

@@ -18,8 +18,8 @@ weather_data <- read.csv("weather data.csv")
 colnames(weather_data)[colnames(weather_data)=="DATE"] <- "Date"
 
 weather_data$Date <- as.Date(weather_data$Date,"%Y-%m-%d")
-typelist = c("Fog","Mist","Drizze","Rain","Snow")
-type_code = c("WT01","WT13","WT14","WT16","WT18")
+typelist = c("Fog","Mist","Drizze","Rain","Snow","Thunder","Heavy fog")
+type_code = c("WT01","WT13","WT14","WT16","WT18","WT03","WT02")
 weather_data$type<-NA
 
 for (i in 1:length(typelist)) {
@@ -98,6 +98,33 @@ for(i in 2012:2017) {
 ```
 
 ```{r}
+ggplot(data = Redsox_All,aes(x = Date, y = Attendance, color = TAVG))+geom_point( ) 
+
+ggplot(data = Redsox_All) +
+  geom_smooth(mapping = aes( x = TAVG, y = Attendance, color = type), se = F)
+
+Dataset= list(Redsox_2012,Redsox_2013,Redsox_2014,Redsox_2015,Redsox_2016,Redsox_2017)
+
+for(i in 1:6){ 
+  p<- ggplot(data = Dataset[[i]],aes(x = TAVG, y = Attendance,  color = type))+
+    geom_point()+geom_smooth(se=F)
+    print(p)
+    }
+
+
  
+
 ```
 
+
+```{r}
+year<-c(2012:2017)
+for (i in 1:6){
+weather_year<-filter(weather_data,str_detect(Date,as.character(year[i])))
+pic<-ggplot(data = weather_year) +
+  aes(x = type, y = TAVG, color = type) +
+  geom_boxplot(fill = "#0c4c8a",notch = FALSE) 
+  theme_minimal()
+print(pic)
+}
+```

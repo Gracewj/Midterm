@@ -46,6 +46,19 @@ for (m in 1:dim(weather_data)[1]) {
 }
 ```
 
+```{r}
+year<-c(2012:2017)
+for (i in 1:6){
+weather_year<-filter(weather_data,str_detect(Date,as.character(year[i])))
+pic<-ggplot(data = weather_year) +
+  aes(x = type, y = TAVG, color = type) +
+  geom_boxplot(fill = "#0c4c8a",notch = FALSE) 
+  theme_minimal()
+print(pic)
+}
+```
+
+
 We got Basketball data from "baskerball-reference". We write code to grab data from their website from 2012 to 2017 season. In this chuck i put code that how we grab data from website and how we build the dataframe. Since we finish the data frame, we export it to be a .csv file for convenience.
 ```{r}
 # library(xml2)
@@ -102,12 +115,13 @@ names(Homegame)[2]<-paste("Date")
 names(Homegame)[3]<-paste("Attendance")
 ```
 
+We got Baseball data from "baseball-reference". We write code to grab data from their website from 2012 to 2017 season. In this chuck i put code that how we grab data from website and how we build the dataframe. Since we finish the data frame, we export it to be a .csv file for convenience.
+Btw, we grab baseball data each year because the baseball season is from April to October. 
+
 ```{r}
-# #site1 <- "https://www.basketball-reference.com/leagues/NBA_"
-# #site2 <- "_games-"
-# #site3 <- ".html"
-# #year <- c(2013:2018)
-# #month <- c("january","february","march","april","may","june","october","november","december")
+# site1 <-"https://www.baseball-reference.com/teams/BOS/"
+#site2 <- "-schedule-scores.shtml"
+# year <- c(2013:2018)
 # month_index<-c(1:9)
 # year_index<-c(1:6)
 # name1<-c()
@@ -116,7 +130,7 @@ names(Homegame)[3]<-paste("Attendance")
 # total.attdence<-c()
 # for (i in year_index){
 #   for (j in month_index){
-#     site<-paste(site1,year[i],site2,month[j],site3,sep="")
+#     site<-paste(site1,year[i],site2,sep="")
 #     webpage<-read_html(site)
 #     name1<- webpage %>% html_nodes('.left:nth-child(1)') %>% html_attrs()
 #     name2<- webpage %>% html_nodes('.center+.right') %>% html_text()
@@ -140,7 +154,7 @@ names(Homegame)[3]<-paste("Attendance")
 # write.csv(b_data3,'Baseball.csv')
 ```
 
-
+WE select several variable include Date, Attendance, year and etc. Since the date of base is like "Sunday,04,11", we seperate "Sunday","04","11" to three different columns and merge year,month and day to be  
 ```{r}
 ####### Baseball Data Only #######
 Baseball <- read.csv("Baseball.csv")
@@ -203,17 +217,7 @@ for(i in 1:6){
 ```
 
 
-```{r}
-year<-c(2012:2017)
-for (i in 1:6){
-weather_year<-filter(weather_data,str_detect(Date,as.character(year[i])))
-pic<-ggplot(data = weather_year) +
-  aes(x = type, y = TAVG, color = type) +
-  geom_boxplot(fill = "#0c4c8a",notch = FALSE) 
-  theme_minimal()
-print(pic)
-}
-```
+
 
 ```{r}
 Dataset2= list(Celtics_2012,Celtics_2013,Celtics_2014,Celtics_2015,Celtics_2016,Celtics_2017)
@@ -223,9 +227,7 @@ for(i in 1:6){
   q <- ggplot(data = Dataset2[[i]],aes(x = TAVG, y = Attendance,  color = type))+
     geom_point()+geom_smooth(se=F)
     print(q)
-  z <- ggplot(data = Dataset2[[i]],aes(x = Date, y = Attendance,  color = type))+
-    geom_point()+geom_smooth(se=F)
-    print(z)
+  
  
     }
 

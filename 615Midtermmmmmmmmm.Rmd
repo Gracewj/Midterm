@@ -170,7 +170,7 @@ Baseball_All<- unite(Clean_5,Date,2:4,sep = "-",remove = TRUE)
 Baseball_All$Date <- as.Date(Baseball_All$Date,"%Y-%m-%d")
 ```
 
-We use inner_join to get weather data only when these two teams played in their host. 
+We use inner_join to get weather data only when these two teams played in their host. After combine weather ,baseball and baketball, we divided them onto different tables by years in order to build ggplot easier.
 
 ```{r}
 ##### Basketball Join Weather ######
@@ -216,9 +216,8 @@ for(i in 1:6){
 
 ```
 
-
-
-
+We built point graph and smooth line on the ggplot, set x-axis = Average temperature and y-axis = attendance and use different colors to show the type of that day's weather. We add one more layer to draw smooth line to show how different weather affect the attendence. From the data, basketball was not affected too much by weather especially the data in 2012 which all are 18624. The reason is that it has stadium.
+Althogh we try to draw smooth line for all year, but actually some year 's data structure are not fit to draw a smooth line. So some ggplot only show points on it.  
 ```{r}
 Dataset2= list(Celtics_2012,Celtics_2013,Celtics_2014,Celtics_2015,Celtics_2016,Celtics_2017)
 

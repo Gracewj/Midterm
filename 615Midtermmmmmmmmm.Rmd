@@ -46,6 +46,9 @@ for (m in 1:dim(weather_data)[1]) {
 }
 ```
 
+Here is the relationship between Weather and Average Temperature. Here we want to use these plots to understand weather type and help to prove the relationship between Weather type and attendence.
+
+
 ```{r,warning=FALSE}
 year<-c(2012:2017)
 for (i in 1:6){
@@ -217,7 +220,8 @@ Dataset= list(Redsox_2012,Redsox_2013,Redsox_2014,Redsox_2015,Redsox_2016,Redsox
 
 for(i in 1:6){ 
   p<- ggplot(data = Dataset[[i]],aes(x = TAVG, y = Attendance,  color = type))+
-    geom_point()+geom_smooth(se=F)
+    geom_point()+geom_smooth(se=F)+
+    ggtitle("Baseball Attendance vs Overall Tempreature ")
     print(p)
     }
 
@@ -234,7 +238,9 @@ Dataset2= list(Celtics_2012,Celtics_2013,Celtics_2014,Celtics_2015,Celtics_2016,
 
 for(i in 1:6){ 
   q <- ggplot(data = Dataset2[[i]],aes(x = TAVG, y = Attendance,  color = type))+
-    geom_point()+geom_smooth(se=F)
+    geom_point()+geom_smooth(se=F)+
+     ggtitle("Basketball Attendance vs Overall Tempreature ")
+    
     print(q)
   
  

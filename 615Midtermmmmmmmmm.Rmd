@@ -11,11 +11,13 @@ library(tidyverse)
 ```
 
 
-We sned email to noaa.com and asked for their weather data. They send us a Data with 18 variables which are different types of weather and max/min temperature. We choose 7 different types of weatherand changes their jorgon to normal words like"snowy" "fog" to help us understand what happen.We make a new column called "type" and then we build a double for loop in order to get weather type everyday. 
+We send email to noaa.com and asked for their weather data. They send us a Data with 18 variables which are different types of weather and max/min temperature. We choose 7 different types of weatherand changes their jorgon to normal words like"snowy" "fog" to help us understand what happen.We make a new column called "type" and then we build a double for loop in order to get weather type everyday. 
+
 ```{r,warning=FALSE}
 ##### new
 ##### Weather Data #####
 
+#Weather data cleaning 
 weather_data <- read.csv("weather data.csv")
 colnames(weather_data)[colnames(weather_data)=="DATE"] <- "Date"
 
@@ -29,7 +31,7 @@ for (i in 1:length(typelist)) {
 }
 
 weather_data[is.null(weather_data)] <- NA
-##Run through all types to get the weather of a certain day, add that to the "type" column
+##Create a new column that contain certian weather type for each day
 for (m in 1:dim(weather_data)[1]) {
   t<-0
   for (n in 1:length(typelist)) {
@@ -51,12 +53,14 @@ Here is the relationship between Weather and Average Temperature. Here we want t
 
 ```{r,warning=FALSE}
 year<-c(2012:2017)
+#Plot weather data
 for (i in 1:6){
 weather_year<-filter(weather_data,str_detect(Date,as.character(year[i])))
 pic<-ggplot(data = weather_year) +
   aes(x = type, y = TAVG, color = type) +
   geom_boxplot(fill = "#0c4c8a",notch = FALSE) 
-  theme_minimal()
+  theme_minimal()+
+  ggtitle("Weather Data Explore ")
 print(pic)
 }
 ```
@@ -110,8 +114,7 @@ Then we grab host variable with string "BOS" to get date when Celitics play in t
 
 ##### Basketball Data Only #####
 
-
-
+#Data Cleaning for basketball data
 Basketball<-read.csv("basketball.csv")
 Homegame <- filter(Basketball,str_detect(host,"BOS"))
 Homegame$date <- substring(Homegame$date, 1,8)
@@ -162,6 +165,7 @@ Btw, we grab baseball data each year because the baseball season is from April t
 WE select several variable include Date, Attendance, year and etc. Since the date of base is like "Sunday,04,11", we seperate "Sunday","04","11" to three different columns and merge year,month and day to be a new date variable, use filter function to get host information. We spend a lot of time to change this date type to become same as the date type in weather data. Final we get date type like "yyyy-mm-dd".
 ```{r,warning=FALSE}
 ####### Baseball Data Only #######
+#Baseball data cleaning
 Baseball <- read.csv("Baseball.csv")
 Clean_1 <- select(Baseball, Date, Tm:Opp, Attendance,Year)
 Clean_2 <- data.frame(do.call('rbind', strsplit(as.character(Clean_1$Date),',',fixed=TRUE)))

@@ -60,6 +60,7 @@ print(pic)
 
 
 We got Basketball data from "baskerball-reference". We write code to grab data from their website from 2012 to 2017 season. In this chuck i put code that how we grab data from website and how we build the dataframe. Since we finish the data frame, we export it to be a .csv file for convenience.
+
 ```{r}
 # library(xml2)
 # library(rvest)
@@ -101,6 +102,7 @@ We got Basketball data from "baskerball-reference". We write code to grab data f
 
 
 Then we grab host variable with string "BOS" to get date when Celitics play in their host "TD Garden". Because date we grab have one more 0 like"201201010". So we use substring to cut out only 8 digitals and convert date type to "yyyy-mm-dd" in order to join with weather data. 
+
 ```{r}
 
 ##### Basketball Data Only #####
@@ -184,6 +186,8 @@ for(i in 2012:2017) {
 
 } 
 ```
+
+
 ```{r}
 ##### Baseball Join Weather #####
 Redsox_All <- inner_join(Baseball_All,weather_data,by = "Date", match = all) 
@@ -196,6 +200,12 @@ for(i in 2012:2017) {
 
 } 
 ```
+
+After gathering the attendence of baseball and weather data together, we made several plots to view the relations between attendence and average temperature.
+
+From the first two plots, we gain an overall picture of the data. Generally, when temperature gets higher, more people are willing to watch the game. This can be seen from the first graph that darker points(which indicate lower temperature) are normally distrubuted at a lower place in the plot(which indicate lower attandence). The second plot also lead to the similar conclusion, while at the same time we can also see that temperature is a more important factor when compared with weather type. 
+
+In the following six plots, we plot the scatter plots to see the relations between temperature and attandence for every year.Different colours are also used to show the influence of different weather types.An interesting discovery is that on thunder, people are even more willing to watch the game in some years. For this phenomenon, we think it might because thunder is often occured in summer,when the temperature is relatively high. Thus the high temperature may be the main cause rather than thunder.
 
 ```{r}
 ggplot(data = Redsox_All,aes(x = Date, y = Attendance, color = TAVG))+geom_point( ) 

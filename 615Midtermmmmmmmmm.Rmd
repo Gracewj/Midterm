@@ -251,3 +251,17 @@ for(i in 1:6){
     }
 
 ```
+
+
+Distribution Table:
+Weather Data & EDA ---- Wenjia xie& siwei HU
+Basketball data& EDA ---- Wenjia xie& Siwei Hu
+BaseBall data& EDA ---- Si Chen& Kaiyu Yan
+Shiny Application ---- Si Chen & Kaiyu Yan
+Report ---- Wenjia xie& Siwei Hu
+
+The contribution Estimate:
+Kaiyu Yan ---- 25%
+Si Chen ---- 25%
+Wenjia Xie ---- 25%
+Siwei Hu ----25%

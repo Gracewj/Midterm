@@ -20,8 +20,8 @@ We send email to noaa.com and asked for their weather data. They send us a Data 
 #Weather data cleaning 
 weather_data <- read.csv("weather data.csv")
 colnames(weather_data)[colnames(weather_data)=="DATE"] <- "Date"
-
 weather_data$Date <- as.Date(weather_data$Date,"%Y-%m-%d")
+#Select certain weather type to do analysis
 typelist = c("Fog","Mist","Drizze","Rain","Snow","Thunder","Heavy fog")
 type_code = c("WT01","WT13","WT14","WT16","WT18","WT03","WT02")
 weather_data$type<-NA
@@ -31,6 +31,7 @@ for (i in 1:length(typelist)) {
 }
 
 weather_data[is.null(weather_data)] <- NA
+
 ##Create a new column that contain certian weather type for each day
 for (m in 1:dim(weather_data)[1]) {
   t<-0
@@ -58,7 +59,7 @@ for (i in 1:6){
 weather_year<-filter(weather_data,str_detect(Date,as.character(year[i])))
 pic<-ggplot(data = weather_year) +
   aes(x = type, y = TAVG, color = type) +
-  geom_boxplot(fill = "#0c4c8a",notch = FALSE) 
+  geom_boxplot(fill = "#0c4c8a",notch = FALSE) +
   theme_minimal()+
   ggtitle("Weather Data Explore ")
 print(pic)
@@ -118,6 +119,7 @@ Then we grab host variable with string "BOS" to get date when Celitics play in t
 Basketball<-read.csv("basketball.csv")
 Homegame <- filter(Basketball,str_detect(host,"BOS"))
 Homegame$date <- substring(Homegame$date, 1,8)
+#Convert original date type 
 Homegame$date <- as.Date(Homegame$date,"%Y%m%d")
 names(Homegame)[2]<-paste("Date")
 names(Homegame)[3]<-paste("Attendance")
@@ -168,6 +170,7 @@ WE select several variable include Date, Attendance, year and etc. Since the dat
 #Baseball data cleaning
 Baseball <- read.csv("Baseball.csv")
 Clean_1 <- select(Baseball, Date, Tm:Opp, Attendance,Year)
+#Convert original date type 
 Clean_2 <- data.frame(do.call('rbind', strsplit(as.character(Clean_1$Date),',',fixed=TRUE)))
 Clean_2 <- data.frame(do.call('rbind', strsplit(as.character(Clean_2$X2),' ',fixed=TRUE)))
 Clean_1 <- merge(Clean_1,Clean_2,by = 0)
@@ -254,14 +257,25 @@ for(i in 1:6){
 
 
 Distribution Table:
-Weather Data & EDA ---- Wenjia xie& siwei HU
-Basketball data& EDA ---- Wenjia xie& Siwei Hu
-BaseBall data& EDA ---- Si Chen& Kaiyu Yan
-Shiny Application ---- Si Chen & Kaiyu Yan
-Report ---- Wenjia xie& Siwei Hu
+
+Weather Data & EDA ---- Wenjia xie& siwei Hu;
+
+Data Cleaning ---- Kaiyu Yan& Si Chen;
+
+Basketball data& EDA ---- Wenjia xie& Siwei Hu;
+
+BaseBall data& EDA ---- Si Chen& Kaiyu Yan;
+
+Shiny Application ---- Si Chen & Kaiyu Yan;
+
+Report ---- Wenjia xie& Siwei Hu;
+
+
+
 
 The contribution Estimate:
-Kaiyu Yan ---- 25%
-Si Chen ---- 25%
-Wenjia Xie ---- 25%
-Siwei Hu ----25%
+
+Kaiyu Yan ---- 25%;
+Si Chen ---- 25%;
+Wenjia Xie ---- 25%;
+Siwei Hu ----25%;

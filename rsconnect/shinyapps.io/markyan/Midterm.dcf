@@ -1,0 +1,12 @@
+name: Midterm
+title: Midterm
+username:
+account: markyan
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 522534
+bundleId: 1650255
+url: https://markyan.shinyapps.io/Midterm/
+when: 1539894419.17243
+asMultiple: FALSE
+asStatic: FALSE

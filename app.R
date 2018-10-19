@@ -18,7 +18,7 @@ for (i in 1:length(typelist)) {
 }
 
 weather_data[is.null(weather_data)] <- NA
-##Run through all types to get the weather of a certain day, add that to the "type" column
+
 for (m in 1:dim(weather_data)[1]) {
   t<-0
   for (n in 1:length(typelist)) {
@@ -90,7 +90,7 @@ ui <- fluidPage(
       hr(),
       helpText("Data is collected from website Baseball reference and Basketball reference.Due to data structure, some smooth plot cannot be shown.")
     ),
-    # Create a spot for the barplot
+    # Create a spot for the plots
     mainPanel(
       h1("Plot Summary"),
       fluidRow(
@@ -114,7 +114,7 @@ server <- function(input, output) {
   })
   
   output$plot2 <- renderPlot({
-    # Plot the kept and excluded points as two separate data sets
+    # Plot  two separate data sets
     ggplot(data = dat()) +
       geom_smooth(fomula = y ~ x, mapping = aes( x = TAVG, y = Attendance, color = type), se = F)+
       geom_point(mapping = aes( x = TAVG, y = Attendance, color = type), se = F)+

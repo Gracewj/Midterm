@@ -12,7 +12,7 @@ library(tidyverse)
 
 
 We sned email to noaa.com and asked for their weather data. They send us a Data with 18 variables which are different types of weather and max/min temperature. We choose 7 different types of weatherand changes their jorgon to normal words like"snowy" "fog" to help us understand what happen.We make a new column called "type" and then we build a double for loop in order to get weather type everyday. 
-```{r}
+```{r,warning=FALSE}
 ##### new
 ##### Weather Data #####
 
@@ -46,7 +46,7 @@ for (m in 1:dim(weather_data)[1]) {
 }
 ```
 
-```{r}
+```{r,warning=FALSE}
 year<-c(2012:2017)
 for (i in 1:6){
 weather_year<-filter(weather_data,str_detect(Date,as.character(year[i])))
@@ -61,7 +61,7 @@ print(pic)
 
 We got Basketball data from "baskerball-reference". We write code to grab data from their website from 2012 to 2017 season. In this chuck i put code that how we grab data from website and how we build the dataframe. Since we finish the data frame, we export it to be a .csv file for convenience.
 
-```{r}
+```{r,warning=FALSE}
 # library(xml2)
 # library(rvest)
 # library(tidyverse)
@@ -103,7 +103,7 @@ We got Basketball data from "baskerball-reference". We write code to grab data f
 
 Then we grab host variable with string "BOS" to get date when Celitics play in their host "TD Garden". Because date we grab have one more 0 like"201201010". So we use substring to cut out only 8 digitals and convert date type to "yyyy-mm-dd" in order to join with weather data. 
 
-```{r}
+```{r,warning=FALSE}
 
 ##### Basketball Data Only #####
 
@@ -120,7 +120,7 @@ names(Homegame)[3]<-paste("Attendance")
 We got Baseball data from "baseball-reference". We write code to grab data from their website from 2012 to 2017 season. In this chuck i put code that how we grab data from website and how we build the dataframe. Since we finish the data frame, we export it to be a .csv file for convenience.
 Btw, we grab baseball data each year because the baseball season is from April to October. 
 
-```{r}
+```{r,warning=FALSE}
 # site1 <-"https://www.baseball-reference.com/teams/BOS/"
 #site2 <- "-schedule-scores.shtml"
 # year <- c(2013:2018)
@@ -157,7 +157,7 @@ Btw, we grab baseball data each year because the baseball season is from April t
 ```
 
 WE select several variable include Date, Attendance, year and etc. Since the date of base is like "Sunday,04,11", we seperate "Sunday","04","11" to three different columns and merge year,month and day to be a new date variable, use filter function to get host information. We spend a lot of time to change this date type to become same as the date type in weather data. Final we get date type like "yyyy-mm-dd".
-```{r}
+```{r,warning=FALSE}
 ####### Baseball Data Only #######
 Baseball <- read.csv("Baseball.csv")
 Clean_1 <- select(Baseball, Date, Tm:Opp, Attendance,Year)
@@ -174,7 +174,7 @@ Baseball_All$Date <- as.Date(Baseball_All$Date,"%Y-%m-%d")
 
 We use inner_join to get weather data only when these two teams played in their host. After combine weather ,baseball and baketball, we divided them onto different tables by years in order to build ggplot easier.
 
-```{r}
+```{r,warning=FALSE}
 ##### Basketball Join Weather ######
 Celtics_All <- inner_join(Homegame,weather_data,by = "Date", match = all) 
 Celtics_All <- select(Celtics_All,Date,Attendance,TAVG,type)
@@ -188,7 +188,7 @@ for(i in 2012:2017) {
 ```
 
 
-```{r}
+```{r,warning=FALSE}
 ##### Baseball Join Weather #####
 Redsox_All <- inner_join(Baseball_All,weather_data,by = "Date", match = all) 
 Redsox_All <- select(Redsox_All,Date,Attendance,TAVG,type)
@@ -207,7 +207,7 @@ From the first two plots, we gain an overall picture of the data. Generally, whe
 
 In the following six plots, we plot the scatter plots to see the relations between temperature and attandence for every year.Different colours are also used to show the influence of different weather types.An interesting discovery is that on thunder, people are even more willing to watch the game in some years. For this phenomenon, we think it might because thunder is often occured in summer,when the temperature is relatively high. Thus the high temperature may be the main cause rather than thunder.
 
-```{r}
+```{r,warning=FALSE}
 ggplot(data = Redsox_All,aes(x = Date, y = Attendance, color = TAVG))+geom_point( ) 
 
 ggplot(data = Redsox_All) +
@@ -228,7 +228,7 @@ for(i in 1:6){
 
 We built point graph and smooth line on the ggplot, set x-axis = Average temperature and y-axis = attendance and use different colors to show the type of that day's weather. We add one more layer to draw smooth line to show how different weather affect the attendence. From the data, basketball was not affected too much by weather especially the data in 2012 which all are 18624. The reason is that it has stadium.
 Althogh we try to draw smooth line for all year, but actually some year 's data structure are not fit to draw a smooth line. So some ggplot only show points on it.  
-```{r}
+```{r,warning=FALSE}
 Dataset2= list(Celtics_2012,Celtics_2013,Celtics_2014,Celtics_2015,Celtics_2016,Celtics_2017)
 
 
